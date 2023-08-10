@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello World API Call</title>
+</head>
+<body>
+<h1>Hello World API Response:</h1>
+<h2 id="apiResponse"></h2>
+
+<script>
+    // Function to fetch data from the API and display the response
+    function fetchHelloWorldAPI() {
+        fetch('http://127.0.0.1:5000/api/data')
+            .then(response => response.json())
+            .then(data => {
+                // Display the API response in the 'apiResponse' div
+                document.getElementById('apiResponse').textContent = data.age;
+            })
+            .catch(error => {
+                // Display an error message if the API call fails
+                document.getElementById('apiResponse').textContent = 'Error fetching data from the API.';
+            });
+    }
+
+    // Call the API function when the page loads
+    fetchHelloWorldAPI();
+</script>
+</body>
+</html>

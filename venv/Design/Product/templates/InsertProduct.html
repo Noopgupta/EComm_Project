@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Products File Upload</title>
+</head>
+<body>
+<h1>Products File Upload</h1>
+<form id="uploadForm">
+  <label for="file">Select a file:</label>
+  <input type="file" id="file" name="file" accept=".txt, .pdf, .doc, .docx, .json">
+  <br>
+  <input type="submit" value="Upload">
+</form>
+
+<script>
+  document.getElementById("uploadForm").addEventListener("submit", function (event) {
+      event.preventDefault(); // Prevent the default form submission behavior
+      const fileInput = document.getElementById("file");
+      const file = fileInput.files[0]; // Get the selected file
+
+      if (file) {
+          const formData = new FormData();
+          formData.append("file", file); // Append the file to the form data
+
+          // Make a POST request to your API endpoint
+          fetch("http://localhost:5000/insertProduct", {
+              method: "POST",
+              body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+              // Handle the API response
+              console.log("API Response:", data);
+          })
+          .catch(error => {
+              // Handle any errors
+              console.error("Error:", error);
+          });
+      }
+  });
+</script>
+</body>
+</html>
