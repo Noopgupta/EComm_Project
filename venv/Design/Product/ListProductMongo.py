@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, send_from_directory
 from pymongo import MongoClient
 import json
 
@@ -62,13 +62,21 @@ def list_products():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/listProducts.html')
-def product():
-    return render_template('listProducts.html')
+# Define the route to serve images
+#@app.route('/images/<path:filename>'
+@app.route('/productImages/<path:filename>')
+def serve_image(filename):
+    return send_from_directory('productImages/', filename)
 
-@app.route('/testImageURL.html')
-def productImage():
-    return render_template('testImageURL.html')
+#@app.route('/listProducts.html')
+#def product():
+#    return render_template('listProducts.html')
+
+#@app.route('/testImageURL.html')
+#def productImage():
+#    return render_template('testImageURL.html')
 
 if __name__ == '__main__':
    app.run(debug=True)
+
+#<path:filename>

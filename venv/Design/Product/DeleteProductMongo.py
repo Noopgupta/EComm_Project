@@ -7,9 +7,9 @@ mongo_client = MongoClient('mongodb://localhost:27017/')
 db = mongo_client['ecomm_noopur']
 collection = db['item_catalogue']
 # Delete one document that matches the given condition
-result = collection.delete_one({"item_id": 1})
+#result = collection.delete_one({"item_id": 1})
 # Delete all documents that match the given condition
-# result = collection.delete_many({"price": {"$gte": 900}})
+result = collection.delete_many({"item_id": {"$gte": 5}})
 
 if result.deleted_count > 0:
     print("Deletion successful.")

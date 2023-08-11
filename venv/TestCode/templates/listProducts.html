@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product List</title>
+    <script>
+        // Function to fetch and display products from the API
+        function fetchProducts() {
+            fetch('http://localhost:5000/listProducts')
+                .then(response => response.json())
+                .then(products => {
+                    const tableBody = document.getElementById('tableBody');
+                    tableBody.innerHTML = ''; // Clear previous table rows
+                    products.forEach(product => {
+                        const row = tableBody.insertRow();
+                        const cell1 = row.insertCell(0);
+                        const cell2 = row.insertCell(1);
+                        const cell3 = row.insertCell(2);
+                        const cell4 = row.insertCell(3);
+                        const cell5 = row.insertCell(4);
+                        const cell6 = row.insertCell(5);
+                        const cell7 = row.insertCell(6);
+                        const cell8 = row.insertCell(7);
+                        cell1.textContent = product.item_id;
+                        cell2.textContent = product.item_name;
+                        cell3.textContent = product.category;
+                        cell4.textContent = product.price;
+                        cell5.textContent = product.description;
+                        cell6.textContent = product.rating;
+                        cell7.textContent = product.reviews;
+                        cell8.textContent = product.image_url;
+
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching products:', error);
+                });
+        }
+    </script>
+</head>
+<body>
+<h1>Product List</h1>
+<button onclick="fetchProducts()">Fetch Products</button>
+<table>
+    <thead>
+    <tr>
+        <th>ItemID</th>
+        <th>ItemName</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Rating</th>
+        <th>Reviews</th>
+        <th>Image</th>
+    </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+</table>
+</body>
+</html>

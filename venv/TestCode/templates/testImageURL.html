@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>API Data Display</title>
+  <title>Product Listing</title>
 
 
 </head>
 <body>
-<h1>API Data Display</h1>
+<h1>Product Listing</h1>
 <table id="data-table">
   <tr>
-    <th>Column 1</th>
-    <th>Column 2</th>
+    <th>Product name</th>
+    <th>Category</th>
+    <th>Price</th>
+    <th>Description</th>
+    <th>Rating</th>
+    <th>Reviews</th>
     <th>Image</th>
   </tr>
 </table>
@@ -26,10 +30,18 @@ data.forEach(item => {
 const row = table.insertRow();
 const column1Cell = row.insertCell(0);
 const column2Cell = row.insertCell(1);
-const imageCell = row.insertCell(2);
+const column3Cell = row.insertCell(2);
+const column4Cell = row.insertCell(3);
+const column5Cell = row.insertCell(4);
+const column6Cell = row.insertCell(5);
+const imageCell = row.insertCell(6);
 
-column1Cell.textContent = item.column1;
-column2Cell.textContent = item.column2;
+column1Cell.textContent = item.item_name;
+column2Cell.textContent = item.category;
+column3Cell.textContent = item.price;
+column4Cell.textContent = item.description;
+column5Cell.textContent = item.rating;
+column6Cell.textContent = item.reviews;
 
 // Create an image element and set its source to the image URL
 const image = document.createElement('img');
