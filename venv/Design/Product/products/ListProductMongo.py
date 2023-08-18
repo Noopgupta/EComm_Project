@@ -4,7 +4,7 @@ import json
 
 app = Flask(__name__)
 
-# Replace the following with your actual MongoDB connection details
+# MongoDB connection details
 mongo_client = MongoClient('mongodb://localhost:27017/')
 db = mongo_client['ecomm_noopur']
 collection = db['item_catalogue']

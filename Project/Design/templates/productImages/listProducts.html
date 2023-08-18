@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Listing</title>
+
+
+</head>
+<body>
+<h1>Product Listing</h1>
+<table id="data-table">
+    <tr>
+        <th>Product name</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Rating</th>
+        <th>Reviews</th>
+        <th>Image</th>
+    </tr>
+</table>
+<script>
+    function fetchProducts() {
+  // Fetch API data
+  fetch('http://127.0.0.1:5000/listProducts')  // Replace with the actual API URL
+  .then(response => response.json())
+  .then(data => {
+  const table = document.getElementById('data-table');
+
+  data.forEach(item => {
+  const row = table.insertRow();
+  const column1Cell = row.insertCell(0);
+  const column2Cell = row.insertCell(1);
+  const column3Cell = row.insertCell(2);
+  const column4Cell = row.insertCell(3);
+  const column5Cell = row.insertCell(4);
+  const column6Cell = row.insertCell(5);
+  const imageCell = row.insertCell(6);
+
+  column1Cell.textContent = item.item_name;
+  column2Cell.textContent = item.category;
+  column3Cell.textContent = item.price;
+  column4Cell.textContent = item.description;
+  column5Cell.textContent = item.rating;
+  column6Cell.textContent = item.reviews;
+
+  // Create an image element and set its source to the image URL
+  const image = document.createElement('img');
+  image.src = item.image_url;
+  image.alt = 'Image';
+  image.width = 100;
+
+  // Append the image to the cell
+  imageCell.appendChild(image);
+  });
+  })
+  .catch(error => {
+  console.error('Error fetching API data:', error);
+  });
+    }
+    fetchProducts()
+</script>
+
+</body>
+</html>

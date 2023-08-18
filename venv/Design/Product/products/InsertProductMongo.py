@@ -24,7 +24,7 @@ def insert_product():
             db = mongo_client['ecomm_noopur']
             collection = db['item_catalogue']
             source_file_path = 'products/' + uploaded_file.filename
-            destination_path = "../uploads/"
+            destination_path = "../../uploads/"
             with open(source_file_path, 'r') as json_file:
                 data_list = json.load(json_file)
                 print(data_list)
