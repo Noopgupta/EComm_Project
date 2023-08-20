@@ -1,12 +1,23 @@
 from cassandra.cluster import Cluster
 # import uuid
 from datetime import datetime
+import json
 
+config_path = '/home/noopur/IdeaProjects/EComm_Noopur/Project/Design/resources/config.json'
+# Load configuration from JSON file
+with open(config_path) as config_file:
+    config = json.load(config_file)
+
+# # Cassandra connection details
+# cassandra_host = config["cassandra"]["host"]
+# cassandra_port = config["cassandra"]["port"]
+# cassandra_keyspace = config["cassandra"]["keyspace"]
+# cassandra_table = config["cassandra"]["table"]
 
 class ShoppingCart:
     def __init__(self, cluster, session, user_id, product_id, quantity):
-        self.cluster = Cluster(['127.0.0.1'], port=9042)
-        self.session = cluster.connect('ecomm_noopur')
+        self.cluster = Cluster([cassandra_host], port=cassandra_port)
+        self.session = cluster.connect(cassandra_keyspace)
         self.user_id = user_id
         self.product_id = product_id
         self.quantity = quantity
@@ -14,7 +25,7 @@ class ShoppingCart:
     def insert_cart(self):
         # Prepare the INSERT statement
         insert_query = """
-        INSERT INTO shopping_cart (user_id, product_id, quantity, added_at)
+        INSERT INTO {cassandra_table} (user_id, product_id, quantity, added_at)
         VALUES (?, ?, ?, ?)
         """
 

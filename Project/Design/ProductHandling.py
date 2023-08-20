@@ -2,27 +2,27 @@ from flask import Flask, jsonify, render_template, request
 from pymongo import MongoClient
 import json
 import shutil
+import os
 
-app = Flask(__name__)
+
 class Product:
     def __init__(self, mongo_client, db, collection, product_id):
         self.product_id = product_id
-        self.mongo_client = MongoClient('mongodb://localhost:27017/')
-        self.db = mongo_client['ecomm_noopur']
-        self.collection = db['item_catalogue']
+        self.mongo_client = MongoClient(mongo_client)
+        self.db = self.mongo_client[db]
+        self.collection = self.db[collection]
 
-    @app.route('/listProducts')
+    # @app.route('/listProducts')
     def list_products(self):
         try:
             # Retrieve all documents from the collection
             all_documents = list(self.collection.find())
-            print(all_documents)
             return json.dumps(all_documents, default=str, indent=4)
 
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
-    @app.route('/insertProduct', methods=['POST'])
+    # @app.route('/insertProduct', methods=['POST'])
     def insert_product(self):
         global result
         try:
@@ -31,11 +31,10 @@ class Product:
             if uploaded_file:
                 # Save the uploaded file to a desired location (e.g., "uploads" folder)
                 uploaded_file.save("products/" + uploaded_file.filename)
-                # return jsonify({"message": "File upload successful"})
 
                 # ***************** Insert bulk data in MONGO DB using JSON file *****************
                 source_file_path = 'products/' + uploaded_file.filename
-                destination_path = "../../venv/Design/uploads/"
+                destination_path = "../../Project/Design/uploads/"
                 with open(source_file_path, 'r') as json_file:
                     data_list = json.load(json_file)
                     print(data_list)
@@ -55,6 +54,10 @@ class Product:
                     print("Insertion failed.")
 
                 self.mongo_client.close()
+                # Overwrite the destination file if already exists
+                if os.path.exists(destination_path + uploaded_file.filename):
+                    os.remove(destination_path + uploaded_file.filename)
+
                 shutil.move(source_file_path, destination_path)
                 return jsonify({"success": "File processed"}), 200
 
@@ -62,7 +65,3 @@ class Product:
                 return jsonify({"error": "No file uploaded"}), 400
         except Exception as e:
             return jsonify({"error": str(e)}), 500
-
-        @app.route('/')
-        def index():
-            return render_template('insertProduct.html')

@@ -1,0 +1,14 @@
+{
+  "mongodb": {
+    "host": "mongodb://localhost:27017/",
+    "database": "ecomm_noopur",
+    "collection": "user_data"
+  },
+  "cassandra": {
+    "host": "127.0.0.1",
+    "port": 9042,
+    "keyspace": "ecomm_noopur",
+    "table": "shopping_cart"
+  }
+}
+
