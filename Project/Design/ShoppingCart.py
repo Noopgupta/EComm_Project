@@ -1,5 +1,5 @@
 from cassandra.cluster import Cluster
-# import uuid
+import uuid
 from datetime import datetime
 import json
 
@@ -15,14 +15,13 @@ with open(config_path) as config_file:
 # cassandra_table = config["cassandra"]["table"]
 
 class ShoppingCart:
-    def __init__(self, cluster, session, user_id, product_id, quantity):
-        self.cluster = Cluster([cassandra_host], port=cassandra_port)
-        self.session = cluster.connect(cassandra_keyspace)
-        self.user_id = user_id
-        self.product_id = product_id
-        self.quantity = quantity
+    def __init__(self, cluster, session, product_detail):
+        self.cluster = cluster
+        self.session = session
+        self.product_detail = product_detail
 
     def insert_cart(self):
+
         # Prepare the INSERT statement
         insert_query = """
         INSERT INTO {cassandra_table} (user_id, product_id, quantity, added_at)
@@ -32,11 +31,11 @@ class ShoppingCart:
         prepared_insert = self.session.prepare(insert_query)
 
         # Generate a new UUID and current timestamp
-        # new_uuid = uuid.uuid4()
+        new_uuid = uuid.uuid4()
         current_time = datetime.now()
 
         # Insert data into the table
-        data_to_insert = (self.user_id, self.product_id, self.quantity, current_time)
+        data_to_insert = (new_uuid, self.product_detail['item_name'], self.product_detail['quantity'], current_time)
         self.session.execute(prepared_insert, data_to_insert)
 
         # Close the Cassandra connection

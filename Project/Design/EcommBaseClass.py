@@ -51,8 +51,9 @@ def index():
     return render_template('insertProduct.html')
 
 
-def insert_cart():
-    sc = ShoppingCart(cassandra_cluster, cassandra_session, uuid.UUID('993012b4-7f57-494f-852f-68673bc5eb02'), 3, 40)
+@app.route('/checkout', methods=['POST'])
+def insert_cart(product_detail=None):
+    sc = ShoppingCart(cassandra_cluster, cassandra_session, product_detail)
     return sc.insert_cart()
 
 

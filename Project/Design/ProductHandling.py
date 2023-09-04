@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request
+from flask import jsonify, request
 from pymongo import MongoClient
 import json
 import shutil
