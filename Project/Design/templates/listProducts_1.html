@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Listing</title>
+
+
+</head>
+<body>
+<h1>Product Listing</h1>
+<button id="cart-button">View Cart</button> <!-- Add the cart button -->
+<table id="data-table">
+    <tr>
+        <th>Product name</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Rating</th>
+        <th>Reviews</th>
+        <th>Image</th>
+        <th>Action</th>
+        <th>QuantityToBeAdded</th>
+    </tr>
+</table>
+<div id="cart-display" style="display: none;"> <!-- Cart display div -->
+    <h2>Shopping Cart</h2>
+    <div id="cart-items"></div> <!-- Cart items will be displayed here -->
+    <button id="checkout-button">Checkout</button>
+</div>
+<script>
+    const cart = [];
+    function fetchProducts() {
+    const cart = []; // Define the cart array outside the fetchProducts function
+
+    // Fetch API data
+    fetch('http://127.0.0.1:5000/listProducts')
+        .then(response => response.json())
+        .then(data => {
+            const table = document.getElementById('data-table');
+
+            data.forEach(item => {
+                const row = table.insertRow();
+                const column1Cell = row.insertCell(0);
+                const column2Cell = row.insertCell(1);
+                const column3Cell = row.insertCell(2);
+                const column4Cell = row.insertCell(3);
+                const column5Cell = row.insertCell(4);
+                const column6Cell = row.insertCell(5);
+                const imageCell = row.insertCell(6);
+                const actionCell = row.insertCell(7); // Add a new cell for the button
+                const quantityCell = row.insertCell(8); // Add a cell for quantity input
+
+                column1Cell.textContent = item.item_name;
+                column2Cell.textContent = item.category;
+                column3Cell.textContent = item.price;
+                column4Cell.textContent = item.description;
+                column5Cell.textContent = item.rating;
+                column6Cell.textContent = item.reviews;
+
+                // Create an image element and set its source to the image URL
+                const image = document.createElement('img');
+                image.src = item.image_url;
+                image.alt = 'Image';
+                image.width = 100;
+
+                // Append the image to the cell
+                imageCell.appendChild(image);
+
+                // Create a button element
+                const button = document.createElement('button');
+                button.textContent = 'Add to Cart'; // Change this to your desired button label
+
+                // Create a quantity input element
+                const quantityInput = document.createElement('input');
+                quantityInput.type = 'number';
+                quantityInput.min = 1;
+                quantityInput.value = 1; // Default quantity to 1
+
+                // Append the button and quantity input to the respective cells
+                actionCell.appendChild(button);
+                quantityCell.appendChild(quantityInput);
+
+                button.addEventListener('click', () => {
+                    const selectedQuantity = parseInt(quantityInput.value, 10);
+
+                    if (selectedQuantity > 0) {
+                        // Create an object to represent the selected product
+                        const selectedProduct = {
+                            name: item.item_name,
+                            quantity: selectedQuantity,
+                            // Add other relevant product information here
+                        };
+
+                        // Add the selected product to the cart array
+                        cart.push(selectedProduct);
+
+                        // You can optionally update the UI to show that the product was added to the cart
+                        alert(`Added ${selectedQuantity} ${selectedProduct.name}(s) to the cart`);
+                    } else {
+                        alert('Please enter a valid quantity (greater than 0).');
+                    }
+                });
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching API data:', error);
+        });
+
+    // You can access the cart array and perform further actions outside this function
+    // For example, you can implement a checkout process.
+}
+fetchProducts();
+
+</script>
+
+</body>
+</html>
