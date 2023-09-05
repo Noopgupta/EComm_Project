@@ -2,31 +2,32 @@
 <html>
 <head>
     <title>Product Listing</title>
+
+
 </head>
 <body>
 <h1>Product Listing</h1>
+<button id="cart-button">View Cart</button> <!-- Add the cart button -->
 <table id="data-table">
     <tr>
-        <th>ProductName</th>
+        <th>Product name</th>
         <th>Category</th>
         <th>Price</th>
         <th>Description</th>
         <th>Rating</th>
         <th>Reviews</th>
         <th>Image</th>
-        <th>Action</th> <!-- Add a new header column for the button -->
+        <th>Action</th>
         <th>QuantityToBeAdded</th>
     </tr>
 </table>
+<div id="cart-display" style="display: none;"> <!-- Cart display div -->
+    <h2>Shopping Cart</h2>
+    <div id="cart-items"></div> <!-- Cart items will be displayed here -->
+    <button id="checkout-button">Checkout</button>
+</div>
 <script>
-    function redirectToCheckoutPage() {
-    // Specify the URL of the checkout page where you want to redirect
-    const checkoutPageURL = 'http://127.0.0.1:5000/checkout.html'; // Replace with the actual URL
-
-    // Redirect to the checkout page
-    window.location.href = checkoutPageURL;
-}
-
+    const cart = [];
     function fetchProducts() {
     const cart = []; // Define the cart array outside the fetchProducts function
 
@@ -34,7 +35,7 @@
     fetch('http://127.0.0.1:5000/listProducts')
         .then(response => response.json())
         .then(data => {
-            const table = document.getElementById('data-table');+
+            const table = document.getElementById('data-table');
 
             data.forEach(item => {
                 const row = table.insertRow();
@@ -94,7 +95,6 @@
 
                         // You can optionally update the UI to show that the product was added to the cart
                         alert(`Added ${selectedQuantity} ${selectedProduct.name}(s) to the cart`);
-                        redirectToCheckoutPage();
                     } else {
                         alert('Please enter a valid quantity (greater than 0).');
                     }
@@ -110,33 +110,7 @@
 }
 fetchProducts();
 
-    function updateCartDisplay() {
-        // Select the cart display element (e.g., a div)
-        const cartDisplay = document.getElementById('cart-display');
-
-        // Clear the previous contents
-        cartDisplay.innerHTML = '';
-
-        // Loop through the cart and display each product
-        cart.forEach((product, index) => {
-            const cartItem = document.createElement('div');
-            cartItem.textContent = `${item.item_name} - $${item.price}`;
-            cartDisplay.appendChild(cartItem);
-        });
-
-        const checkoutButton = document.createElement('button');
-        checkoutButton.textContent = 'Checkout';
-        checkoutButton.addEventListener('click', () => {
-        // Handle the checkout process here (e.g., send cart data to the server)
-        // You can also clear the cart after a successful purchase
-        cart.length = 0;
-        updateCartDisplay();
-        alert('Checkout completed!');
-});
-
-}
-
-    updateCartDisplay();
 </script>
+
 </body>
 </html>
