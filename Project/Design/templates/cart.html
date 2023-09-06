@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shopping Cart</title>
+</head>
+<body>
+<h1>Your Shopping Cart</h1>
+
+<div id="cart-content">
+  <!-- Cart contents will be displayed here -->
+</div>
+
+<button id="checkout-button">Checkout</button>
+
+<script>
+  // JavaScript code for displaying cart contents
+
+  // Parse the cart data from the query parameter
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const cartData = urlParams.get('cartData');
+  const cart = JSON.parse(decodeURIComponent(cartData));
+  console.log(urlParams)
+  console.log(cartData)
+  console.log(cart)
+
+  // Function to update the cart display
+  function updateCartDisplay() {
+      const cartContent = document.getElementById('cart-content');
+
+      // Clear the previous contents
+      cartContent.innerHTML = '';
+
+      // Loop through the cart and display each product
+      cart.forEach(product => {
+          const cartItem = document.createElement('div');
+          cartItem.textContent = `${product.name} - Quantity: ${product.quantity}`;
+          cartContent.appendChild(cartItem);
+      });
+  }
+
+  // Call the function to update the cart display
+  updateCartDisplay();
+
+  // Event listener for the "Checkout" button
+  const checkoutButton = document.getElementById('checkout-button');
+  checkoutButton.addEventListener('click', () => {
+      // Handle the checkout process here (e.g., send cart data to the server)
+      // You can also clear the cart after a successful purchase
+      cart.length = 0;
+      updateCartDisplay();
+      alert('Checkout completed!');
+  });
+</script>
+</body>
+</html>

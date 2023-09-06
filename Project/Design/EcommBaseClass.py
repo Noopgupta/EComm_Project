@@ -51,7 +51,7 @@ def index():
     return render_template('insertProduct.html')
 
 
-@app.route('/checkout', methods=['POST'])
+@app.route('/insertCart', methods=['POST'])
 def insert_cart(product_detail=None):
     sc = ShoppingCart(cassandra_cluster, cassandra_session, product_detail)
     return sc.insert_cart()

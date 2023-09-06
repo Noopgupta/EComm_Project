@@ -7,7 +7,7 @@
 </head>
 <body>
 <h1>Product Listing</h1>
-<button id="cart-button">View Cart</button> <!-- Add the cart button -->
+<button id="cart-button">View Cart</button>
 <table id="data-table">
     <tr>
         <th>Product name</th>
@@ -29,7 +29,6 @@
 <script>
     const cart = [];
     function fetchProducts() {
-    const cart = []; // Define the cart array outside the fetchProducts function
 
     // Fetch API data
     fetch('http://127.0.0.1:5000/listProducts')
@@ -81,6 +80,7 @@
 
                 button.addEventListener('click', () => {
                     const selectedQuantity = parseInt(quantityInput.value, 10);
+                    console.log(selectedQuantity);
 
                     if (selectedQuantity > 0) {
                         // Create an object to represent the selected product
@@ -91,7 +91,14 @@
                         };
 
                         // Add the selected product to the cart array
-                        cart.push(selectedProduct);
+                        const existingProduct = cart.find(product => product.name === item.item_name);
+<!--                        console.log("increment product: "+existingProduct.quantity);-->
+                        if (existingProduct) {
+                            // If the product is already in the cart, increase the quantity
+                            existingProduct.quantity += selectedQuantity;
+                        } else {
+                            cart.push(selectedProduct);
+                            }
 
                         // You can optionally update the UI to show that the product was added to the cart
                         alert(`Added ${selectedQuantity} ${selectedProduct.name}(s) to the cart`);
@@ -110,6 +117,18 @@
 }
 fetchProducts();
 
+    document.addEventListener('DOMContentLoaded', () => {
+        // Event listener for the "View Cart" button
+    const cartButton = document.getElementById('cart-button');
+    cartButton.addEventListener('click', () => {
+        // Prepare cart data to pass to the cart.html page
+        const cartData = JSON.stringify(cart);
+
+        // Open a new window or tab with cart.html and pass cart data as a query parameter
+        const cartPageURL = `cart.html?cartData=${encodeURIComponent(cartData)}`;
+        window.open(cartPageURL, '_blank');
+    });
+});
 </script>
 
 </body>
