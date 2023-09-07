@@ -26,13 +26,15 @@ class ShoppingCart:
         order_id = uuid.uuid4()
         current_time = datetime.now()
         data_to_insert = []
+        cart_details = []
 
         for item in cart_dict:
             if 'id' in item:
                 # Insert data into the table
                 data_to_insert.append([order_id, current_time, item['id'], item['quantity'], user_id])
+                cart_details.append([str(order_id), str(user_id), current_time, item['id'], item['quantity'], item['name'],
+                                     item['price']])
 
-        print(data_to_insert)
         batch = BatchStatement()
 
         # Add each record to the batch
@@ -46,6 +48,8 @@ class ShoppingCart:
         # Close the Cassandra connection
         self.session.shutdown()
         self.cluster.shutdown()
+
+        return cart_details
 
     def delete_from_cart(self):
         # Define the DELETE statement

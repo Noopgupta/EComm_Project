@@ -1,3 +1,4 @@
+from OrderHandling import Order
 from ProductHandling import Product
 from ShoppingCart import ShoppingCart
 import json
@@ -15,7 +16,8 @@ with open(config_path) as config_file:
 # MongoDB's connection details
 mongodb_host = config["mongodb"]["host"]
 mongodb_database = config["mongodb"]["database"]
-mongodb_collection = config["mongodb"]["collection"]
+mongodb_user_collection = config["mongodb"]["user_collection"]
+mongodb_product_collection = config["mongodb"]["product_collection"]
 
 # Cassandra's connection details
 cassandra_host = config["cassandra"]["host"]
@@ -27,7 +29,6 @@ cassandra_session = cassandra_cluster.connect(cassandra_keyspace)
 
 app = Flask(__name__)
 CORS(app)
-# cart_data = {}
 
 class EcommBaseClass:
     def __init__(self):
@@ -36,13 +37,13 @@ class EcommBaseClass:
 
 @app.route('/listProducts')
 def list_products():
-    product = Product(mongodb_host, mongodb_database, mongodb_collection, 1)
+    product = Product(mongodb_host, mongodb_database, mongodb_product_collection, 1)
     return product.list_products()
 
 
 @app.route('/insertProduct', methods=['POST'])
 def insert_product():
-    product = Product(mongodb_host, mongodb_database, mongodb_collection, 1)
+    product = Product(mongodb_host, mongodb_database, mongodb_product_collection, 1)
     return product.insert_product()
 
 
@@ -50,11 +51,18 @@ def insert_product():
 def index():
     return render_template('insertProduct.html')
 
+
 @app.route('/cart', methods=['POST'])
 def receive_cart_data():
     cart_data = request.json  # JSON data sent in the request body
-    insert_cart(cart_data)
+    cart_details = insert_cart(cart_data)
+    insert_order(cart_details)
     return jsonify({'message': cart_data})
+
+
+def insert_order(cart_data):
+    order = Order(mongodb_host, mongodb_database, mongodb_user_collection, cart_data)
+    return order.insert_order(cart_data)
 
 
 def insert_cart(cart_data):

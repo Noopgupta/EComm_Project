@@ -2,7 +2,8 @@
   "mongodb": {
     "host": "mongodb://localhost:27017/",
     "database": "ecomm_noopur",
-    "collection": "item_catalogue"
+    "user_collection": "user_data",
+    "product_collection": "item_catalogue"
   },
   "cassandra": {
     "host": "127.0.0.1",

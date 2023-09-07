@@ -89,6 +89,7 @@
                             id: item.item_id,
                             name: item.item_name,
                             quantity: selectedQuantity,
+                            price: item.price
                             // Add other relevant product information here
                         };
                         console.log(selectedProduct);
@@ -105,7 +106,7 @@
                             }
 
                         // You can optionally update the UI to show that the product was added to the cart
-                        alert(`Added ${selectedQuantity} ${selectedProduct.name}(s) to the cart`);
+                        alert(`Added ${selectedQuantity} with id: ${selectedProduct.id} ${selectedProduct.name}(s) to the cart`);
                     } else {
                         alert('Please enter a valid quantity (greater than 0).');
                     }

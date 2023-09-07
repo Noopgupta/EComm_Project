@@ -7,12 +7,14 @@ mongo_client = MongoClient('mongodb://localhost:27017/')
 # ****************** Code to delete data from MONGO DB ******************
 db = mongo_client['ecomm_noopur']
 collection = db['item_catalogue']
+# collection = db['user_data']
 # Delete one document that matches the given condition
 #result = collection.delete_one({"item_id": 1})
 # Delete all documents that match the given condition
 # result = collection.delete_many({"item_id": {"$gte": 5}})
 
 string_ids = ["64d10b358f859266a83f4ecf", "64d10b358f859266a83f4ecd", "64d10b358f859266a83f4ecc"]
+# string_ids = []
 
 # Convert string IDs to ObjectId objects
 object_ids = [ObjectId(id) for id in string_ids]
