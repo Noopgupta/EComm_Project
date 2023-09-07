@@ -1,42 +1,47 @@
-from cassandra.cluster import Cluster
-import uuid
 from datetime import datetime
 import json
+import uuid
+from cassandra.query import BatchStatement
 
-config_path = '/home/noopur/IdeaProjects/EComm_Noopur/Project/Design/resources/config.json'
-# Load configuration from JSON file
-with open(config_path) as config_file:
-    config = json.load(config_file)
-
-# # Cassandra connection details
-# cassandra_host = config["cassandra"]["host"]
-# cassandra_port = config["cassandra"]["port"]
-# cassandra_keyspace = config["cassandra"]["keyspace"]
-# cassandra_table = config["cassandra"]["table"]
 
 class ShoppingCart:
-    def __init__(self, cluster, session, product_detail):
+    def __init__(self, cluster, session, cassandra_table, cart_data):
         self.cluster = cluster
         self.session = session
-        self.product_detail = product_detail
+        self.cassandra_table = cassandra_table
+        self.cart_data = cart_data
 
-    def insert_cart(self):
-
+    def insert_cart(self, cart_data):
         # Prepare the INSERT statement
-        insert_query = """
-        INSERT INTO {cassandra_table} (user_id, product_id, quantity, added_at)
-        VALUES (?, ?, ?, ?)
+        insert_query = f"""
+        INSERT INTO {self.cassandra_table} (order_id, added_at, product_id, quantity, user_id)
+        VALUES (?, ?, ?, ?, ?)
         """
 
         prepared_insert = self.session.prepare(insert_query)
+        cart_dict = json.loads(cart_data)
 
         # Generate a new UUID and current timestamp
-        new_uuid = uuid.uuid4()
+        user_id = uuid.uuid4()
+        order_id = uuid.uuid4()
         current_time = datetime.now()
+        data_to_insert = []
 
-        # Insert data into the table
-        data_to_insert = (new_uuid, self.product_detail['item_name'], self.product_detail['quantity'], current_time)
-        self.session.execute(prepared_insert, data_to_insert)
+        for item in cart_dict:
+            if 'id' in item:
+                # Insert data into the table
+                data_to_insert.append([order_id, current_time, item['id'], item['quantity'], user_id])
+
+        print(data_to_insert)
+        batch = BatchStatement()
+
+        # Add each record to the batch
+        for record in data_to_insert:
+            bound_insert = prepared_insert.bind(record)
+            batch.add(bound_insert)
+
+        # Execute the batch statement
+        self.session.execute(batch)
 
         # Close the Cassandra connection
         self.session.shutdown()

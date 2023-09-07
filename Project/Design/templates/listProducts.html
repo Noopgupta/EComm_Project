@@ -82,13 +82,17 @@
                     const selectedQuantity = parseInt(quantityInput.value, 10);
                     console.log(selectedQuantity);
 
+                    console.log(item);
                     if (selectedQuantity > 0) {
                         // Create an object to represent the selected product
                         const selectedProduct = {
+                            id: item.item_id,
                             name: item.item_name,
                             quantity: selectedQuantity,
                             // Add other relevant product information here
                         };
+                        console.log(selectedProduct);
+
 
                         // Add the selected product to the cart array
                         const existingProduct = cart.find(product => product.name === item.item_name);

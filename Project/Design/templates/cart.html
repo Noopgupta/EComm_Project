@@ -20,9 +20,9 @@
   const urlParams = new URLSearchParams(queryString);
   const cartData = urlParams.get('cartData');
   const cart = JSON.parse(decodeURIComponent(cartData));
-  console.log(urlParams)
-  console.log(cartData)
-  console.log(cart)
+<!--  console.log(urlParams)-->
+<!--  console.log(cartData)-->
+<!--  console.log(cart)-->
 
   // Function to update the cart display
   function updateCartDisplay() {
@@ -51,6 +51,23 @@
       updateCartDisplay();
       alert('Checkout completed!');
   });
+
+  fetch('http://127.0.0.1:5000/cart', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(cartData), // Convert the JSON object to a string
+})
+.then(response => response.json())
+.then(data => {
+    // Handle the response from your Python API
+    console.log(data);
+})
+.catch(error => {
+    console.error('Error:', error);
+});
+
 </script>
 </body>
 </html>

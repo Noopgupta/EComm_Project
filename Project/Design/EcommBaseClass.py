@@ -1,7 +1,7 @@
 from ProductHandling import Product
 from ShoppingCart import ShoppingCart
 import json
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from cassandra.cluster import Cluster
 import uuid
@@ -27,7 +27,7 @@ cassandra_session = cassandra_cluster.connect(cassandra_keyspace)
 
 app = Flask(__name__)
 CORS(app)
-
+# cart_data = {}
 
 class EcommBaseClass:
     def __init__(self):
@@ -50,11 +50,16 @@ def insert_product():
 def index():
     return render_template('insertProduct.html')
 
+@app.route('/cart', methods=['POST'])
+def receive_cart_data():
+    cart_data = request.json  # JSON data sent in the request body
+    insert_cart(cart_data)
+    return jsonify({'message': cart_data})
 
-@app.route('/insertCart', methods=['POST'])
-def insert_cart(product_detail=None):
-    sc = ShoppingCart(cassandra_cluster, cassandra_session, product_detail)
-    return sc.insert_cart()
+
+def insert_cart(cart_data):
+    sc = ShoppingCart(cassandra_cluster, cassandra_session, cassandra_table, cart_data)
+    return sc.insert_cart(cart_data)
 
 
 def delete_from_cart():
