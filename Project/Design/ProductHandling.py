@@ -3,6 +3,17 @@ from pymongo import MongoClient
 import json
 import shutil
 import os
+from Logger import Logger
+
+
+config_path = '/home/noopur/IdeaProjects/EComm_Noopur/Project/Design/resources/config.json'
+
+# Load configuration from JSON file
+with open(config_path) as config_file:
+    config = json.load(config_file)
+
+product_log_file = config["logger"]["product_log_file"]
+product_logger = Logger(product_log_file, 'prd')
 
 
 class Product:
@@ -12,17 +23,22 @@ class Product:
         self.db = self.mongo_client[db]
         self.collection = self.db[collection]
 
-    # @app.route('/listProducts')
     def list_products(self):
         try:
             # Retrieve all documents from the collection
             all_documents = list(self.collection.find())
-            return json.dumps(all_documents, default=str, indent=4)
+            print("list_products try")
 
         except Exception as e:
-            return jsonify({"error": str(e)}), 500
+            # Log the error
+            product_logger.log_error(str(e))
+            print("list_products except")
+        else:
+            # Log a success message
+            product_logger.log_message(data=None)
+            print("list_products else")
+            return json.dumps(all_documents, default=str, indent=4)
 
-    # @app.route('/insertProduct', methods=['POST'])
     def insert_product(self):
         global result
         try:
@@ -59,9 +75,10 @@ class Product:
                     os.remove(destination_path + uploaded_file.filename)
 
                 shutil.move(source_file_path, destination_path)
-                return jsonify({"success": "File processed"}), 200
 
-            else:
-                return jsonify({"error": "No file uploaded"}), 400
         except Exception as e:
-            return jsonify({"error": str(e)}), 500
+            # Log the error
+            product_logger.log_error(str(e))
+        else:
+            # Log a success message
+            product_logger.log_message(data=None)

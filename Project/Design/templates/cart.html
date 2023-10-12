@@ -47,9 +47,10 @@
   checkoutButton.addEventListener('click', () => {
       // Handle the checkout process here (e.g., send cart data to the server)
       // You can also clear the cart after a successful purchase
-      cart.length = 0;
+      cart.length = 0;   // Cart doesn't empty after checkout ****************
       updateCartDisplay();
       alert('Checkout completed!');
+
   });
 
   fetch('http://127.0.0.1:5000/cart', {

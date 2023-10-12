@@ -10,6 +10,13 @@
     "port": 9042,
     "keyspace": "ecomm_noopur",
     "table": "shopping_cart"
+  },
+"logger": {
+    "product_log_file": "/home/noopur/IdeaProjects/EComm_Noopur/Project/Design/logs/product.log",
+    "shopping_cart_log_file": "/home/noopur/IdeaProjects/EComm_Noopur/Project/Design/logs/shopping_cart.log",
+    "order_log_file": "/home/noopur/IdeaProjects/EComm_Noopur/Project/Design/logs/order.log"
+  },
+"kafka": {
+    "topic_name": "EcommNoopur"
   }
 }
-
